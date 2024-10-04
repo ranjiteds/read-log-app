@@ -62,7 +62,7 @@ const readLastLines = (filePath: string, n: number): Promise<string[]> => {
 
 app.get('/', async (req: Request, res: any) => {
     const fileName = req.query.file as string | undefined;
-    const n = parseInt(req.query.n as string, 10) || undefined;
+    const n = parseInt(req.query.n as string, 10) || 100;
 
     if (!fileName) {
         return res.status(400).send('File name is required');
@@ -86,7 +86,8 @@ app.get('/', async (req: Request, res: any) => {
             const lines = await readLastLines(filePath, n);
             res.type('text/plain').send(lines.join('\n'));
         } else {
-            res.download(filePath);
+            //res.download(filePath);
+            return res.status(401).send('Inavlid request');
         }
     } catch (error) {
         res.status(500).send(`Error reading the file: ${(error as Error).message}`);

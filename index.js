@@ -65,7 +65,7 @@ const readLastLines = (filePath, n) => {
 };
 app.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const fileName = req.query.file;
-    const n = parseInt(req.query.n, 10) || undefined;
+    const n = parseInt(req.query.n, 10) || 100;
     if (!fileName) {
         return res.status(400).send('File name is required');
     }
@@ -85,7 +85,8 @@ app.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             res.type('text/plain').send(lines.join('\n'));
         }
         else {
-            res.download(filePath);
+            //res.download(filePath);
+            return res.status(401).send('Inavlid request');
         }
     }
     catch (error) {
