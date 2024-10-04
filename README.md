@@ -1,9 +1,9 @@
 Read a file from the path set in env file, this app can be used to read log files from server wihout server access.
 
 Security - 
- API key enabled 
- Only Get requests 
- Path set in env file, it only read from the path that is set in env 
+ - API key enabled
+ - Only Get requests 
+ - Path set in env file, it only read from the path that is set in env 
 
 ENV Variables -
 ```
