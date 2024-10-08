@@ -1,7 +1,7 @@
-import express, { Request, Response, NextFunction } from 'express';
+import dotenv from 'dotenv';
+import express, { NextFunction, Request } from 'express';
 import fs from 'fs';
 import path from 'path';
-import dotenv from 'dotenv';
 import readline from 'readline';
 
 dotenv.config();
@@ -9,6 +9,8 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 const API_KEY = process.env.API_KEY; // Use a pre-defined API key for authentication
+const CONFIDENTIAL_WORDS = process.env.CONFIDENTIAL_WORDS ? process.env.CONFIDENTIAL_WORDS.split(',') : [];
+
 
 // Middleware to block all other request methods except GET
 app.use((req: Request, res: any, next: NextFunction) => {
@@ -47,7 +49,12 @@ const readLastLines = (filePath: string, n: number): Promise<string[]> => {
         });
 
         rl.on('line', (line) => {
-            lines.push(line);
+
+            if (containsConfidentialWord(line)) {
+                lines.push('***');
+            } else
+                lines.push(line);
+
             if (lines.length > n) {
                 lines.shift(); // Keep only the last n lines in memory
             }
@@ -57,6 +64,11 @@ const readLastLines = (filePath: string, n: number): Promise<string[]> => {
         rl.on('error', (err) => reject(err));
     });
 };
+
+const containsConfidentialWord = (line: string): boolean => {
+    return CONFIDENTIAL_WORDS.some(word => line.toLowerCase().includes(word.toLowerCase()));
+}
+
 
 app.get('/', async (req: Request, res: any) => {
     const fileName = req.query.file as string | undefined;

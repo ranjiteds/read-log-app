@@ -12,15 +12,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const dotenv_1 = __importDefault(require("dotenv"));
 const express_1 = __importDefault(require("express"));
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
-const dotenv_1 = __importDefault(require("dotenv"));
 const readline_1 = __importDefault(require("readline"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 const API_KEY = process.env.API_KEY; // Use a pre-defined API key for authentication
+const CONFIDENTIAL_WORDS = process.env.CONFIDENTIAL_WORDS ? process.env.CONFIDENTIAL_WORDS.split(',') : [];
 // Middleware to block all other request methods except GET
 app.use((req, res, next) => {
     if (req.method !== 'GET') {
@@ -51,7 +52,11 @@ const readLastLines = (filePath, n) => {
             crlfDelay: Infinity,
         });
         rl.on('line', (line) => {
-            lines.push(line);
+            if (containsConfidentialWord(line)) {
+                lines.push('***');
+            }
+            else
+                lines.push(line);
             if (lines.length > n) {
                 lines.shift(); // Keep only the last n lines in memory
             }
@@ -59,6 +64,9 @@ const readLastLines = (filePath, n) => {
         rl.on('close', () => resolve(lines));
         rl.on('error', (err) => reject(err));
     });
+};
+const containsConfidentialWord = (line) => {
+    return CONFIDENTIAL_WORDS.some(word => line.toLowerCase().includes(word.toLowerCase()));
 };
 app.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const fileName = req.query.file;
