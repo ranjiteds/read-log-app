@@ -8,7 +8,6 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
-const API_AUTH_ENABLED = process.env.API_AUTH_ENABLED === 'true'; // Read from .env (true/false)
 const API_KEY = process.env.API_KEY; // Use a pre-defined API key for authentication
 
 // Middleware to block all other request methods except GET
@@ -21,17 +20,16 @@ app.use((req: Request, res: any, next: NextFunction) => {
 
 // Middleware for API authentication (enabled if API_AUTH_ENABLED is true)
 const apiAuthMiddleware = (req: Request, res: any, next: NextFunction) => {
-    if (API_AUTH_ENABLED) {
-        const authHeader = req.headers.authorization;
+    const authHeader = req.headers.authorization;
 
-        if (!authHeader) {
-            return res.status(401).send('Unauthorized: No API key provided');
-        }
-
-        if (authHeader !== `Bearer ${API_KEY}`) {
-            return res.status(401).send('Unauthorized: Invalid API key');
-        }
+    if (!authHeader) {
+        return res.status(401).send('Unauthorized Access');
     }
+
+    if (authHeader !== `Bearer ${API_KEY}`) {
+        return res.status(401).send('Unauthorized Access');
+    }
+
     next();
 };
 
