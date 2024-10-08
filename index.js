@@ -90,7 +90,6 @@ app.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             res.type('text/plain').send(lines.join('\n'));
         }
         else {
-            //res.download(filePath);
             return res.status(401).send('Inavlid request');
         }
     }

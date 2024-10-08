@@ -96,7 +96,6 @@ app.get('/', async (req: Request, res: any) => {
             const lines = await readLastLines(filePath, n);
             res.type('text/plain').send(lines.join('\n'));
         } else {
-            //res.download(filePath);
             return res.status(401).send('Inavlid request');
         }
     } catch (error) {
