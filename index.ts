@@ -69,8 +69,7 @@ const containsConfidentialWord = (line: string): boolean => {
     return CONFIDENTIAL_WORDS.some(word => line.toLowerCase().includes(word.toLowerCase()));
 }
 
-
-app.get('/', async (req: Request, res: any) => {
+app.get('/rlogs', async (req: Request, res: any) => {
     const fileName = req.query.file as string | undefined;
     const n = parseInt(req.query.n as string, 10) || 100;
 

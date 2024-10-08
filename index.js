@@ -68,7 +68,7 @@ const readLastLines = (filePath, n) => {
 const containsConfidentialWord = (line) => {
     return CONFIDENTIAL_WORDS.some(word => line.toLowerCase().includes(word.toLowerCase()));
 };
-app.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.get('/rlogs', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const fileName = req.query.file;
     const n = parseInt(req.query.n, 10) || 100;
     if (!fileName) {
